@@ -7,88 +7,110 @@ session_start();
 	<title> Login | Coffee Shoot </title>
 	<link rel="stylesheet" href="styles/loginSignup.css">
 	<?php
-	
+
 if (isset($_POST['sign-in'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    $quary = "SELECT * FROM registered_user WHERE email ='{$email}' AND password = '{$password}' LIMIT 1 ";
-    $result = mysqli_query($con, $quary);
+    $stmt = $con->prepare("SELECT Username AS username, email, password, type FROM registered_user WHERE email = ? LIMIT 1");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    if (mysqli_num_rows($result) > 0) {
-        $row = mysqli_fetch_array($result);
-        
-        $_SESSION['username'] = $row['Username'];
-        $_SESSION['email'] = $row['email'];
+    if ($result && $result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $storedPassword = $row['password'] ?? '';
 
-        if ($row['type'] == 'client') {
-            echo '<script>alert("You have successfully logged in!");
-            document.addEventListener("DOMContentLoaded", function() {
-                window.location.href = "client/client home.html";
-            });
-        </script>';
-        } 
-        elseif ($row['type'] == 'admin') {
-			 echo '<script>alert("You have successfully logged in!");
-            document.addEventListener("DOMContentLoaded", function() {
-                window.location.href = "admin/admin home.html";
-            });
-        </script>';
-           
-        } 
-        elseif ($row['type'] == 'studio') {
-			 echo '<script>alert("You have successfully logged in!");
-            document.addEventListener("DOMContentLoaded", function() {
-                window.location.href = "studio/studio home.html";
-            });
-        </script>';
-            
-        } 
-    } 
-    
+        $isValid = false;
+        if (is_string($storedPassword) && $storedPassword !== '' && password_verify($password, $storedPassword)) {
+            $isValid = true;
+        } elseif ($storedPassword === $password) {
+            $isValid = true;
+
+            $newHash = password_hash($password, PASSWORD_DEFAULT);
+            $updateStmt = $con->prepare("UPDATE registered_user SET password = ? WHERE email = ? LIMIT 1");
+            $updateStmt->bind_param("ss", $newHash, $email);
+            $updateStmt->execute();
+            $updateStmt->close();
+        }
+
+        if ($isValid) {
+            $_SESSION['username'] = $row['username'];
+            $_SESSION['email'] = $row['email'];
+
+            if ($row['type'] == 'client') {
+                echo '<script>alert("You have successfully logged in!");
+                document.addEventListener("DOMContentLoaded", function() {
+                    window.location.href = "client/client home.html";
+                });
+            </script>';
+            }
+            elseif ($row['type'] == 'admin') {
+                 echo '<script>alert("You have successfully logged in!");
+                document.addEventListener("DOMContentLoaded", function() {
+                    window.location.href = "admin/admin home.html";
+                });
+            </script>';
+
+            }
+            elseif ($row['type'] == 'studio') {
+                 echo '<script>alert("You have successfully logged in!");
+                document.addEventListener("DOMContentLoaded", function() {
+                    window.location.href = "studio/studio home.html";
+                });
+            </script>';
+
+            }
+        } else {
+            $errors[] = "<h1>Username or Password is invalid</h1>";
+        }
+    }
+
     else {
         $errors[] = "<h1>Username or Password is invalid</h1>";
     }
+
+    if (isset($stmt) && $stmt) {
+        $stmt->close();
+    }
 }
 if (isset($_POST['sign-up'])) {
-    $Username =  $_POST['Username'];
+    $Username = $_POST['Username'];
     $password = $_POST['password'];
 	$mobileNo = $_POST['mobileNo'];
     $email = $_POST['email'];
     $repass = $_POST['repassword'];
 
     //check username already exists
-    $Username = mysqli_real_escape_string($con, $_POST['Username']);
-    $quary = "SELECT * FROM registered_user WHERE Username = '{$Username}' LIMIT 1";
+    $checkStmt = $con->prepare("SELECT 1 FROM registered_user WHERE Username = ? LIMIT 1");
+    $checkStmt->bind_param("s", $Username);
+    $checkStmt->execute();
+    $resultset = $checkStmt->get_result();
 
-    $resultset = mysqli_query($con, $quary);
-    if ($resultset) {
-        if (mysqli_num_rows($resultset) == 1) {
-			$errors[] = 'Username has already taken!';
-			echo '<script>alert("Username has already taken!");
-            
-            
+    if ($resultset && $resultset->num_rows == 1) {
+        $errors[] = 'Username has already taken!';
+        echo '<script>alert("Username has already taken!");
         </script>';
-		 
-        }
     }
+    $checkStmt->close();
 
     if ($password != $repass) {
 		$errors[] = 'Password does not match';
 		echo '<script>alert("Passwords do not match!");
         </script>';
-        
+
     }
 
     if (empty($errors)) {
-        $Username = mysqli_real_escape_string($con, $_POST['Username']);
-        $password = mysqli_real_escape_string($con, $_POST['password']);
-		$mobileNo = mysqli_real_escape_string($con, $_POST['mobileNo']);
-        $email = mysqli_real_escape_string($con, $_POST['email']);
 		$type = 'client';
 
-        $quary = "INSERT INTO  registered_user (Username,password,mobileNo,email,type) VALUES ('{$Username}','{$password}','{$mobileNo}','{$email}','{$type}')";
-        $result = mysqli_query($con, $quary);
+        $hash = password_hash($password, PASSWORD_DEFAULT);
+        $profilePicture = 'unkown.png';
+
+        $insertStmt = $con->prepare("INSERT INTO registered_user (Username, password, phone, mobileNo, email, type, profile_picture) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $insertStmt->bind_param("sssssss", $Username, $hash, $mobileNo, $mobileNo, $email, $type, $profilePicture);
+        $result = $insertStmt->execute();
+        $insertStmt->close();
 
         if ($result) {
             echo '<script>alert("Account created successfully!");
@@ -109,13 +131,13 @@ if (isset($_POST['sign-up'])) {
 	<div class="form-container sign-up-container">
 		<form action="login_signup.php" method="post">
 			<h1>Create Account</h1>
-			
+
 			<input type="text" placeholder="Name" name="Username"><br>
 			<input type="email" placeholder="Email" name="email" ><br>
 			<input type="text" placeholder="Mobile no." name="mobileNo" ><br>
 			<input type="password" placeholder="Password" name="password" ><br>
 			<input type="password" placeholder="Reenter Password" name="repassword" ><br>
-			
+
 			<button name='sign-up'>Sign Up</button>
 		</form>
 	</div>

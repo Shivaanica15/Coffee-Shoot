@@ -3,10 +3,28 @@ require'config.php';
 ?>
 <?php
 session_start();
-$email = $_SESSION['email'];
+
+// Admin authorization
+if (!isset($_SESSION['email'])) {
+    header('Location: ../login_signup.php');
+    exit();
+}
+
+$sessionEmail = $_SESSION['email'];
+$authStmt = $con->prepare("SELECT type FROM registered_user WHERE email = ? LIMIT 1");
+$authStmt->bind_param("s", $sessionEmail);
+$authStmt->execute();
+$authResult = $authStmt->get_result();
+$authRow = $authResult ? $authResult->fetch_assoc() : null;
+$authStmt->close();
+
+if (!$authRow || ($authRow['type'] ?? null) !== 'admin') {
+    header('Location: ../login_signup.php');
+    exit();
+}
 
 // Read
-$sql = "SELECT * FROM registered_user";
+$sql = "SELECT Username AS username, password, phone, email, studio_name, type FROM registered_user";
 $result = $con->query($sql);
 $users = [];
 
@@ -14,78 +32,98 @@ while($row = $result->fetch_assoc()) {
     $users[] = $row;
 }
 if (isset($_POST['Save-changes'])) {
-    $Username =  $_POST['Username'];
-    $password = $_POST['password'];
-	$mobileNo = $_POST['mobileNo'];
-    $email = $_POST['email'];
-    $repass = $_POST['repassword'];
+    $username = trim($_POST['username'] ?? '');
+    $password = $_POST['password'] ?? '';
+    $repass = $_POST['repassword'] ?? '';
+    $phone = trim($_POST['phone'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $type = trim($_POST['type'] ?? '');
+    $studioName = trim($_POST['studio_name'] ?? '');
 
-    if ($password != $repass) {
-		$errors[] = 'Password does not match';
-		echo '<script>alert("Passwords do not match!");
-        </script>';
-        
-    }
+    if ($email === '') {
+        echo '<script>alert("Email is required.");</script>';
+    } elseif ($password !== '' && $password !== $repass) {
+        echo '<script>alert("Passwords do not match!");</script>';
+    } else {
+        if ($password !== '') {
+            $hash = password_hash($password, PASSWORD_DEFAULT);
+            $stmt = $con->prepare("UPDATE registered_user SET Username = ?, password = ?, phone = ?, mobileNo = ?, type = ?, studio_name = ? WHERE email = ? LIMIT 1");
+            $stmt->bind_param("sssssss", $username, $hash, $phone, $phone, $type, $studioName, $email);
+        } else {
+            $stmt = $con->prepare("UPDATE registered_user SET Username = ?, phone = ?, mobileNo = ?, type = ?, studio_name = ? WHERE email = ? LIMIT 1");
+            $stmt->bind_param("ssssss", $username, $phone, $phone, $type, $studioName, $email);
+        }
 
-    if (empty($errors)) {
-        $Username = mysqli_real_escape_string($con, $_POST['Username']);
-        $password = mysqli_real_escape_string($con, $_POST['password']);
-		$mobileNo = mysqli_real_escape_string($con, $_POST['mobileNo']);
-        $email = mysqli_real_escape_string($con, $_POST['email']);
-		$type = 'client';
+        $ok = $stmt->execute();
+        $stmt->close();
 
-        $quary = "UPDATE registered_user SET Username = '{$Username}', password = '{$password}', mobileNo = '{$mobileNo}', type = '{$type}' 
-WHERE email = '{$email}';";
-        $result = mysqli_query($con, $quary);
-
-        if ($result) {
+        if ($ok) {
             echo '<script>alert("Account successfully updated!");
             document.addEventListener("DOMContentLoaded", function() {
                 window.location.href = "viewallusers.php";
             });
         </script>';
         } else {
-            $errors[] = 'Faild to add the record';
+            echo '<script>alert("Failed to update account.");</script>';
         }
     }
 }
 
 
 if (isset($_POST['deleteAccount'])) {
-    $Username =  $_POST['Username'];
-    $password = $_POST['password'];
-	$mobileNo = $_POST['mobileNo'];
-    $email = $_POST['email'];
-    $repass = $_POST['repassword'];
+    $email = trim($_POST['email'] ?? '');
+    if ($email === '') {
+        echo '<script>alert("Email is required.");</script>';
+    } else {
+        $stmt = $con->prepare("DELETE FROM registered_user WHERE email = ? LIMIT 1");
+        $stmt->bind_param("s", $email);
+        $ok = $stmt->execute();
+        $stmt->close();
 
-    $quary = "DELETE FROM registered_user WHERE email = '{$email}' LIMIT 1";
-    $result = mysqli_query($con, $quary);
-    if ($result) {
-       echo '<script>alert("Account deleted !");
-            document.addEventListener("DOMContentLoaded", function() {
-                window.location.href = "viewallusers.php";
-            });
-        </script>';
+        if ($ok) {
+           echo '<script>alert("Account deleted !");
+                document.addEventListener("DOMContentLoaded", function() {
+                    window.location.href = "viewallusers.php";
+                });
+            </script>';
+        } else {
+            echo '<script>alert("Failed to delete account.");</script>';
+        }
     }
 }
 
 if (isset($_POST['Create-account'])) {
-    $Username =  $_POST['Username'];
-    $password = $_POST['password'];
-	$mobileNo = $_POST['mobileNo'];
-    $email = $_POST['email'];
-    $type = $_POST['type'];
-	
-	 $quary = "INSERT INTO  registered_user (Username,password,mobileNo,email,type) VALUES ('{$Username}','{$password}','{$mobileNo}','{$email}','{$type}')";
-        $result = mysqli_query($con, $quary);
+    $username = trim($_POST['username'] ?? '');
+    $password = $_POST['password'] ?? '';
+    $repass = $_POST['repassword'] ?? '';
+    $phone = trim($_POST['phone'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $type = trim($_POST['type'] ?? '');
+    $studioName = trim($_POST['studio_name'] ?? '');
+    $profilePicture = 'unkown.png';
 
-        if ($result) {
+    if ($email === '' || $username === '' || $password === '') {
+        echo '<script>alert("Username, email, and password are required.");</script>';
+    } elseif ($repass !== '' && $password !== $repass) {
+        echo '<script>alert("Passwords do not match!");</script>';
+    } else {
+        $hash = password_hash($password, PASSWORD_DEFAULT);
+
+        $stmt = $con->prepare("INSERT INTO registered_user (Username, password, phone, mobileNo, email, studio_name, type, profile_picture) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssssssss", $username, $hash, $phone, $phone, $email, $studioName, $type, $profilePicture);
+        $ok = $stmt->execute();
+        $stmt->close();
+
+        if ($ok) {
             echo '<script>alert("Account created successfully!");
             document.addEventListener("DOMContentLoaded", function() {
                 window.location.href = "viewallusers.php";
             });
         </script>';
+        } else {
+            echo '<script>alert("Failed to create account. Email may already exist.");</script>';
         }
+    }
 }
 
 
@@ -121,7 +159,7 @@ $con->close();
         tr:nth-child(even) {
             background-color: #f2f2f2;
         }
-		
+
 *,
 *:before,
 *:after {
@@ -398,7 +436,7 @@ h2{
             <tr>
                 <th>Username</th>
                 <th>Password</th>
-				<th>mobileNo</th>
+				<th>Phone</th>
                 <th>Email</th>
 				<th>Studio name</th>
                 <th>Type</th>
@@ -407,9 +445,9 @@ h2{
         <tbody>
             <?php foreach($users as $user): ?>
                 <tr>
-                    <td><?php echo $user["Username"]; ?></td>
+                    <td><?php echo $user["username"]; ?></td>
                     <td><?php echo $user["password"]; ?></td>
-					<td><?php echo $user["mobileNo"]; ?></td>
+					<td><?php echo $user["phone"]; ?></td>
                     <td><?php echo $user["email"]; ?></td>
 					<td><?php echo $user["studio_name"]; ?></td>
                     <td><?php echo $user["type"]; ?></td>
@@ -422,7 +460,7 @@ h2{
     <div class="row">
       <h4>Account</h4>
       <div class="input-group input-group-icon">
-        <input type="text" placeholder="Username" name="Username" >
+        <input type="text" placeholder="Username" name="username" >
         <div class="input-icon">
           <i  class="fa fa-user"></i>
         </div>
@@ -434,12 +472,12 @@ h2{
         </div>
       </div>
 	  <div class="input-group input-group-icon">
-          <input type="text" placeholder="Mobile no." name="mobileNo" >
+          <input type="text" placeholder="Phone" name="phone" >
         <div class="input-icon">
           <i style="font-size:26px;" class="fa fa-mobile-phone"></i>
         </div>
       </div>
-      
+
     </div>
 	<div class="row">
       <h4>Change password</h4>
@@ -467,6 +505,12 @@ h2{
           <i class="fa fa-key"></i>
         </div>
       </div>
+	  <div class="input-group input-group-icon">
+        <input type="text" placeholder="Studio name" name="studio_name">
+        <div class="input-icon">
+          <i class="fa fa-key"></i>
+        </div>
+      </div>
     </div><br>
     <div class="row">
       <div class="input-group">
@@ -489,7 +533,7 @@ function myFunction() {
 }
 </script>
 
-	
+
 
 
 

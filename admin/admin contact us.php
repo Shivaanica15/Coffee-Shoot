@@ -1,17 +1,40 @@
 <?php
 require 'config.php';
+session_start();
+
+// Admin authorization
+if (!isset($_SESSION['email'])) {
+    header('Location: ../login_signup.php');
+    exit();
+}
+
+$sessionEmail = $_SESSION['email'];
+$authStmt = $con->prepare("SELECT type FROM registered_user WHERE email = ? LIMIT 1");
+$authStmt->bind_param("s", $sessionEmail);
+$authStmt->execute();
+$authResult = $authStmt->get_result();
+$authRow = $authResult ? $authResult->fetch_assoc() : null;
+$authStmt->close();
+
+if (!$authRow || ($authRow['type'] ?? null) !== 'admin') {
+    header('Location: ../login_signup.php');
+    exit();
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $Name = $_POST["name"];
-    $Email = $_POST["email"];
-    $Message = $_POST["message"];
+    $Name = trim($_POST["name"] ?? '');
+    $Email = trim($_POST["email"] ?? '');
+    $Message = trim($_POST["message"] ?? '');
 
-    $sql = "INSERT INTO Inquiries (Name, Email, Message) VALUES ('$Name', '$Email', '$Message')";
+    $stmt = $con->prepare("INSERT INTO Inquiries (Name, Email, Message) VALUES (?, ?, ?)");
+    $stmt->bind_param("sss", $Name, $Email, $Message);
+    $ok = $stmt->execute();
+    $stmt->close();
 
-    if ($con->query($sql)) {
+    if ($ok) {
         echo '<script>alert("Your message has been send successfully!");
             document.addEventListener("DOMContentLoaded", function() {
-                window.location.href = "contact us.html";
+                window.location.href = "admin contact us.php";
             });
         </script>';
     } else {
@@ -151,7 +174,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	    <img src="img/LOGOf.png"> <!--style="border: 5px solid white; border-radius: 50%; "-->
 		<center>
 		<video  muted autoplay loop>
-			<source  src="img/V!.mp4" type="video/mp4"> 
+			<source  src="img/V!.mp4" type="video/mp4">
 		</video>
 		</center>
         <nav>
@@ -164,7 +187,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <a href="About us.html" class="nav-link">About Us</a>
                 <a href="admin contact us.php" class="nav-link">Contact Us</a>
                 <a href="viewallinquire.php" class="nav-link btn-login">View all inquires</a>
-                
+
             </div>
         </nav>
     </header>
@@ -173,7 +196,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	<center>
     <fieldset class="form_contact">
         <h2>Contact Us</h2>
-        <form method="post" action="contact_us_form.php">
+        <form method="post" action="admin contact us.php">
             <p>Name</p>
             <input class="contact_form" type="text" placeholder="Your full name..." name="name">
 
@@ -189,10 +212,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </fieldset>
 </center>
 	<hr>
-	
+
 	<footer>
         <p>&copy; 2024 Coffee Shoot</p>
     </footer>
-	
-	
-	

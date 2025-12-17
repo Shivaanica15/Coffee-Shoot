@@ -76,9 +76,68 @@ CREATE TABLE IF NOT EXISTS `media` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Seed minimal accounts so login/explore works immediately.
-INSERT IGNORE INTO `registered_user`
-  (`Username`,`password`,`mobileNo`,`phone`,`email`,`type`,`studio_name`,`profile_picture`)
+INSERT INTO `registered_user`
+  (`Username`,`password`,`phone`,`mobileNo`,`email`,`type`,`studio_name`,`profile_picture`)
 VALUES
-  ('Admin','admin123',NULL,NULL,'admin@coffeeshoot.local','admin',NULL,'unkown.png'),
-  ('Demo Client','client123','0770000000',NULL,'client@coffeeshoot.local','client',NULL,'unkown.png'),
-  ('Demo Studio','studio123',NULL,'0770000001','studio@coffeeshoot.local','studio','Demo Studio','unkown.png');
+  ('System Admin', '$2y$10$P9463sLVOTZeat0kCIyNuureJIkcJidQVjhTFJHlQIBeRoINQ2NW2', '0712345678', '0712345678', 'admin@coffeeshoot.local', 'admin', NULL, 'unkown.png')
+ON DUPLICATE KEY UPDATE
+  `Username`=VALUES(`Username`),
+  `password`=VALUES(`password`),
+  `phone`=VALUES(`phone`),
+  `mobileNo`=VALUES(`mobileNo`),
+  `type`=VALUES(`type`),
+  `studio_name`=VALUES(`studio_name`),
+  `profile_picture`=VALUES(`profile_picture`);
+
+INSERT INTO `registered_user`
+  (`Username`,`password`,`phone`,`mobileNo`,`email`,`type`,`studio_name`,`profile_picture`)
+VALUES
+  ('Amaya Silva', '$2y$10$UZTBT5y2RuvpebZwH3F7T.LCRQpgFjqtxIkx6ccSp//WSo01ZL9xu', '0771122334', '0771122334', 'amaya.silva@example.com', 'client', NULL, 'unkown.png'),
+  ('Kasun Perera', '$2y$10$UZTBT5y2RuvpebZwH3F7T.LCRQpgFjqtxIkx6ccSp//WSo01ZL9xu', '0719988776', '0719988776', 'kasun.perera@example.com', 'client', NULL, 'unkown.png')
+ON DUPLICATE KEY UPDATE
+  `Username`=VALUES(`Username`),
+  `password`=VALUES(`password`),
+  `phone`=VALUES(`phone`),
+  `mobileNo`=VALUES(`mobileNo`),
+  `type`=VALUES(`type`),
+  `studio_name`=VALUES(`studio_name`),
+  `profile_picture`=VALUES(`profile_picture`);
+
+INSERT INTO `registered_user`
+  (`Username`,`password`,`phone`,`mobileNo`,`email`,`type`,`studio_name`,`profile_picture`)
+VALUES
+  ('Nethmi Jayasinghe', '$2y$10$nUjNqBEdSi9zfgyJ7rMto.jQ9KN6NQIPO/pN1K7rERImD0b842Ijq', '0785566778', '0785566778', 'studio@coffeeshoot.local', 'studio', 'LensCraft Studio', 'unkown.png')
+ON DUPLICATE KEY UPDATE
+  `Username`=VALUES(`Username`),
+  `password`=VALUES(`password`),
+  `phone`=VALUES(`phone`),
+  `mobileNo`=VALUES(`mobileNo`),
+  `type`=VALUES(`type`),
+  `studio_name`=VALUES(`studio_name`),
+  `profile_picture`=VALUES(`profile_picture`);
+
+-- Keep legacy demo client account (used by older pages/configs)
+INSERT INTO `registered_user`
+  (`Username`,`password`,`phone`,`mobileNo`,`email`,`type`,`studio_name`,`profile_picture`)
+VALUES
+  ('Demo Client', '$2y$10$UZTBT5y2RuvpebZwH3F7T.LCRQpgFjqtxIkx6ccSp//WSo01ZL9xu', '0770000000', '0770000000', 'client@coffeeshoot.local', 'client', NULL, 'unkown.png')
+ON DUPLICATE KEY UPDATE
+  `Username`=VALUES(`Username`),
+  `password`=VALUES(`password`),
+  `phone`=VALUES(`phone`),
+  `mobileNo`=VALUES(`mobileNo`),
+  `type`=VALUES(`type`),
+  `studio_name`=VALUES(`studio_name`),
+  `profile_picture`=VALUES(`profile_picture`);
+
+-- Dummy bookings (3+)
+INSERT INTO `booking` (`email`,`event`,`location`,`date`,`time`,`studioName`,`package_type`) VALUES
+  ('amaya.silva@example.com','Wedding','Colombo','2026-01-10','10:30:00','LensCraft Studio','Wedding'),
+  ('kasun.perera@example.com','Birthday','Kandy','2026-02-05','15:00:00','LensCraft Studio','Birthday'),
+  ('amaya.silva@example.com','Outdoor','Galle','2026-03-18','07:30:00','LensCraft Studio','Outdoor');
+
+-- Dummy inquiries (3+)
+INSERT INTO `Inquiries` (`Name`,`Email`,`Message`) VALUES
+  ('Amaya Silva','amaya.silva@example.com','Hi, can I change my booking date if needed?'),
+  ('Kasun Perera','kasun.perera@example.com','Do you offer a birthday package with 2 photographers?'),
+  ('Nethmi Jayasinghe','studio@coffeeshoot.local','Please help me update my studio profile details.');

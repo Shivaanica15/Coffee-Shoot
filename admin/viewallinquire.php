@@ -3,10 +3,28 @@ require'config.php';
 ?>
 <?php
 session_start();
-$email = $_SESSION['email'];
+
+// Admin authorization
+if (!isset($_SESSION['email'])) {
+    header('Location: ../login_signup.php');
+    exit();
+}
+
+$sessionEmail = $_SESSION['email'];
+$authStmt = $con->prepare("SELECT type FROM registered_user WHERE email = ? LIMIT 1");
+$authStmt->bind_param("s", $sessionEmail);
+$authStmt->execute();
+$authResult = $authStmt->get_result();
+$authRow = $authResult ? $authResult->fetch_assoc() : null;
+$authStmt->close();
+
+if (!$authRow || ($authRow['type'] ?? null) !== 'admin') {
+    header('Location: ../login_signup.php');
+    exit();
+}
 
 // Read
-$sql = "SELECT * FROM Inquiries"; 
+$sql = "SELECT * FROM Inquiries";
 $result = $con->query($sql);
 $inquiries = [];
 

@@ -3,7 +3,25 @@ require'config.php';
 ?>
 <?php
 session_start();
-$email = $_SESSION['email'];
+
+// Admin authorization
+if (!isset($_SESSION['email'])) {
+    header('Location: ../login_signup.php');
+    exit();
+}
+
+$sessionEmail = $_SESSION['email'];
+$authStmt = $con->prepare("SELECT type FROM registered_user WHERE email = ? LIMIT 1");
+$authStmt->bind_param("s", $sessionEmail);
+$authStmt->execute();
+$authResult = $authStmt->get_result();
+$authRow = $authResult ? $authResult->fetch_assoc() : null;
+$authStmt->close();
+
+if (!$authRow || ($authRow['type'] ?? null) !== 'admin') {
+    header('Location: ../login_signup.php');
+    exit();
+}
 
 // Read
 $sql = "SELECT * FROM booking";
@@ -57,8 +75,8 @@ table {
                     <td><?php echo $booking["event"]; ?></td>
 					<td><?php echo $booking["location"]; ?></td>
                     <td><?php echo $booking["date"]; ?></td>
-					<td><?php echo $booking["time"]; ?></td>
-                    <td><?php echo $booking["studioName"]; ?></td>
+					<td><?php echo $booking["studioName"]; ?></td>
+                    <td><?php echo $booking["time"]; ?></td>
 					<td><?php echo $booking["package_type"]; ?></td>
                 </tr>
             <?php endforeach; ?>
