@@ -1,0 +1,111 @@
+
+
+        h1 {
+            color: white;
+        }
+       
+        .profile-picture {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-gap: 20px;
+            justify-content: center;
+        }
+        .media-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+        }
+        .media-thumbnail {
+            max-width: 100%;
+            max-height: 200px;
+        }
+        .media-item.selected {
+            outline: 4px solid blue;
+        }
+        .box {
+            background-image:radial-gradient(#964734,#000);
+            padding:25x;
+            border-radius: 10px;
+            margin-bottom: 50px;
+            width: 30%;
+            
+        }
+        .box1{
+            background-image:radial-gradient(#964734,#000);
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            width: 80%;
+            height:auto;
+        }
+
+    /* Button styles */
+button {
+  font-family: 'Arial', sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 12px 24px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+/* Upload button */
+.upload-btn {
+  background-color:lightblue;
+  color: black;
+  width:30%;
+  height:5%;
+}
+
+.upload-btn:hover {
+  background-color: #45a049;
+  transform: scale(1.05);
+}
+
+/* Delete button */
+.delete-btn {
+  background-color: lightblue;
+  color: black;
+}
+
+.delete-btn:hover {
+  background-color: #da190b;
+  transform: scale(1.05);
+}
+
+/* Choose file button */
+.choose-file-btn {
+  background-color:lightblue;
+  color: black;
+  width:50%;
+}
+
+.choose-file-btn:hover {
+  background-color: #0b7dda;
+  transform: scale(1.05);
+}
+
+/* Edit profile button */
+.edit-profile-btn {
+  background-color:lightblue;
+  color: black;
+}
+
+.edit-profile-btn:hover {
+  background-color: #7b1fa2;
+  transform: scale(1.05); }
+
+.h{
+    color:white;
+}

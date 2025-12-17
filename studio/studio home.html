@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Home | Coffee Shoot</title>
+    <style>
+		body {
+			font-family: Arial, sans-serif;
+			margin: 0;
+			padding: 0;
+		}
+
+		header {
+			background-image: linear-gradient(to right, #1f0b00 , #581f02);
+			background-color: #1f0b00;
+			color: #fff;
+			padding: 10px;
+		}
+
+		nav {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.logo a {
+			color: #fff;
+			text-decoration: none;
+		}
+
+		.nav-links {
+			display: flex;
+		}
+
+		.nav-link {
+			color: #fff;
+			text-decoration: none;
+			padding: 10px 20px;
+			margin-left: 10px;
+			border-radius: 5px;
+		}
+
+		.nav-link:hover {
+			background-color: #5E503F;
+		}
+
+		.btn-login {
+			background-color: #A9927D;
+			color: white;
+		}
+
+		.btn-register {
+			background-color: #49111C;
+			color: white;
+		}
+
+		main {
+			padding: 20px;
+			text-align: center;
+		}
+
+		footer {
+			background-color: #0A0908;
+			color: #fff;
+			padding: 10px;
+			text-align: center;
+		}
+		
+			* {box-sizing: border-box}
+		.mySlides1, .mySlides2 {display: none}
+		img {vertical-align: middle;}
+
+		/* Slideshow container */
+		.slideshow-container {
+		  max-width: 1000px;
+		  position: relative;
+		  margin: auto;
+		}
+
+		/* Next & previous buttons */
+		.prev, .next {
+		  cursor: pointer;
+		  position: absolute;
+		  top: 50%;
+		  width: auto;
+		  padding: 16px;
+		  margin-top: -22px;
+		  color: white;
+		  font-weight: bold;
+		  font-size: 18px;
+		  transition: 0.6s ease;
+		  border-radius: 0 3px 3px 0;
+		  user-select: none;
+		}
+
+		/* Position the "next button" to the right */
+		.next {
+		  right: 0;
+		  border-radius: 3px 0 0 3px;
+		}
+
+		/* On hover, add a grey background color */
+		.prev:hover, .next:hover {
+		  background-color: #f1f1f1;
+		  color: black;
+		}
+	</style>
+</head>
+<body>
+    <header>
+		<center> <img src="img/LOGOf.png"  style="padding-bottom:100px;">
+			<video  muted autoplay loop style="padding-top: 50px;">
+				<source  src="img/V!.mp4" type="video/mp4"> 
+			</video>
+			</center> <!--style="border: 5px solid white; border-radius: 50%; "-->
+			
+        <nav>
+            <div class="logo">
+                <a href="home.html"><h1>Coffee Shoot</h1></a>
+            </div>
+            <div class="nav-links">
+                <a href="studio home.html" class="nav-link">Home</a>
+                <a href="user.php" class="nav-link">Explore</a>
+                <a href="studio about us.html" class="nav-link">About Us</a>
+                <a href="studio contact us.php" class="nav-link">Contact Us</a>
+                <a href="studionew.php" class="nav-link btn-login">View my profile</a>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <h2>Welcome to our Event Photography management Platform - Coffee Shoot</h2>
+            <p>Capture and manage your event memories with ease.</p>
+        </section>
+    </main>
+	<div class="slideshow-container">
+		<div class="mySlides1">
+		<img src="img/nature.jpg" style="width:100%">
+	</div>
+
+	<div class="mySlides1">
+		<img src="img/bday.jpg" style="width:100%">
+	</div>
+
+	<div class="mySlides1">
+		<img src="img/Corporate-Events.jpg" style="width:100%">
+	</div>
+	
+	<div class="mySlides1">
+		<img src="img/baby.jpg" style="width:100%">
+	</div>
+	
+	<div class="mySlides1">
+		<img src="img/2.jpg" style="width:100%">
+	</div>
+
+	<a class="prev" onclick="plusSlides(-1, 0)">&#10094;</a>
+	<a class="next" onclick="plusSlides(1, 0)">&#10095;</a>
+	</div>
+    <footer>
+        <p>&copy; 2024 Coffee Shoot</p>
+    </footer>
+	<script>
+		let slideIndex = [1,1];
+		let slideId = ["mySlides1", "mySlides2"]
+		showSlides(1, 0);
+		showSlides(1, 1);
+
+		function plusSlides(n, no) {
+		  showSlides(slideIndex[no] += n, no);
+		}
+
+		function showSlides(n, no) {
+		  let i;
+		  let x = document.getElementsByClassName(slideId[no]);
+		  if (n > x.length) {slideIndex[no] = 1}    
+		  if (n < 1) {slideIndex[no] = x.length}
+		  for (i = 0; i < x.length; i++) {
+			 x[i].style.display = "none";  
+		  }
+		  x[slideIndex[no]-1].style.display = "block";  
+		}
+</script>
+</body>
+</html>

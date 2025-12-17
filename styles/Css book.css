@@ -1,0 +1,140 @@
+﻿section{
+    padding:2rem 9%
+}
+
+.heading{
+    text-align:center;
+    padding:2.5rem 0
+}
+
+.heading span {
+        font-size: 3.5rem;
+        background: rgba(255,165,0);
+        color: var(--orange);
+        border-radius: .5rem;
+        padding: .2rem 1rem;
+}
+
+.heading span.space {
+        background: none;
+}
+
+
+.btn {
+    
+    margin-top: 2rem;
+    background:rgba(255,165,0);
+    color: black;
+    Padding-top: 22px;
+    Padding-bottom: 22px;
+    Padding-left: 28px;
+    Padding-right: 28px;
+    border: 3rem solid var(#666);
+    Border-radius: 20px;
+    font-size:28px;
+    cursor:pointer;
+}
+
+.Book .row{
+    display: flex;
+    flex-wrap: wrap;
+    gap:1.5rem;
+    align-items:center
+}
+
+.Book.image {
+        flex: 1 1 40rem;
+        width: 100%;
+    }
+
+.Book .row form{
+    flex:1 1 40rem;
+    padding: 2rem;
+    box-shadow:0 1rem 2rem rgb(0, 0, 0,.1);
+    border-radius: 5rem
+}
+
+.Book .row form .inputbox input{
+    width:100%;
+    padding:1rem;
+    border:1rem solid rgba(0,0,0,.1);
+    font-size: 1.7rem;
+    color:#333;
+    text-transform:none;
+}
+
+.Book .row form .inputbox h3{
+    font-size:2rem;
+    padding:1rem 0;
+    color:#666
+
+}
+    .Book .row form .inputbox select {
+        padding-left: 100px;
+        padding-right: 100px;
+        padding-top: 25px;
+        padding-bottom: 25px;
+        font-size: 28px;
+        width: 100%;
+        padding: 1rem; 
+        border: 1rem solid rgba(0,0,0,.1);
+    }
+
+        /* packages */
+
+
+.column {
+    float: left;
+    width: 350px;
+    padding: 10px;
+}
+
+    /* Style the images inside the grid */
+ .column img {
+        opacity: 0.8;
+        cursor: pointer;
+    }
+ .column img:hover {
+            opacity: 1;
+        }
+.image-row {
+    display: flex;
+}
+.row img{
+    width: 300px;
+    height: 300px;
+    margin-right: 100px;
+}
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* Closable button inside the image */
+.closebtn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    color: white;
+    font-size: 35px;
+    cursor: pointer;
+}
+
+.checked {
+    color: orange;
+}
+
+.button {
+    padding: 8px 15px;
+    font-size: 14px;
+    text-align: center;
+    cursor: pointer;
+}
+.button:active {
+    background-color: #3e8e41;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+}
+
