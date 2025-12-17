@@ -51,6 +51,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
+<div style="margin: 10px 0;">
+    <a href="admin home.html">Back to Dashboard</a>
+</div>
 	<style>
 	body {
 			font-family: Arial, sans-serif;

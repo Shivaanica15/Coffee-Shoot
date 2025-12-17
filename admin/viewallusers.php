@@ -130,6 +130,9 @@ if (isset($_POST['Create-account'])) {
 $con->close();
 ?>
 
+<div style="margin: 10px 0;">
+    <a href="admin home.html">Back to Dashboard</a>
+</div>
 
 <!DOCTYPE html>
 <html lang="en">

@@ -129,6 +129,9 @@ if (isset($_POST['Create'])) {
 $conn->close();
 ?>
 
+<div style="margin: 10px 0;">
+    <a href="admin/admin home.html">Back to Dashboard</a>
+</div>
 
 <!DOCTYPE html>
 <html lang="en">

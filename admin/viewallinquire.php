@@ -33,6 +33,10 @@ while($row = $result->fetch_assoc()) {
 }
 $con->close();
 ?>
+
+<div style="margin: 10px 0;">
+    <a href="admin home.html">Back to Dashboard</a>
+</div>
 <html>
 <head>
 <title>Coffee Shoot</title>
