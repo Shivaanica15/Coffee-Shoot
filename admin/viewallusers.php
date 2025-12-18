@@ -130,10 +130,6 @@ if (isset($_POST['Create-account'])) {
 $con->close();
 ?>
 
-<div style="margin: 10px 0;">
-    <a href="admin home.html">Back to Dashboard</a>
-</div>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -143,6 +139,7 @@ $con->close();
 <meta name="veiwport" content="width-device-width, initial-scal=1.0">
 <title>Coffee Shoot</title>
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="admin.css">
 <style>
         table {
             border-collapse: collapse;
@@ -168,13 +165,13 @@ $con->close();
 *:after {
   box-sizing: border-box;
 }
-body {
-  padding: 1em;
-  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+body.admin-page {
+  padding: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   font-size: 15px;
-  color: #b9b9b9;
-  background:Radial-gradient(#964734,#000);
-  }
+  color: var(--admin-text);
+  background: var(--admin-bg);
+}
 h4 {
   color: #966b9d;
 }
@@ -431,10 +428,37 @@ h2{
 }
     </style>
 </head>
-<body>
-<h1>Admin Page</h1>
-<h2>User Table</h2>
-    <table>
+<body class="admin-page">
+    <div class="admin-topbar">
+        <div class="admin-topbar-inner">
+            <div class="admin-brand">
+                <p class="admin-brand-title">Users</p>
+                <p class="admin-brand-subtitle">Admin Panel</p>
+            </div>
+            <div class="admin-nav">
+                <a href="admin home.html">Dashboard</a>
+                <a href="viewallusers.php">Users</a>
+                <a href="viewallbooking.php">Bookings</a>
+                <a href="viewallinquire.php">Inquiries</a>
+                <a href="admin contact us.php">Messages</a>
+                <a class="btn btn-danger" href="logout.php">Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-container">
+        <div class="admin-back">
+            <a href="admin home.html">Back to Dashboard</a>
+        </div>
+        <div class="admin-page-title">
+            <div>
+                <h1>Manage Users</h1>
+                <p>View all registered users and manage accounts.</p>
+            </div>
+        </div>
+
+        <div class="admin-surface">
+            <table class="admin-table">
         <thead>
             <tr>
                 <th>Username</th>
@@ -457,7 +481,10 @@ h2{
                 </tr>
             <?php endforeach; ?>
         </tbody>
-    </table><br><br>
+            </table>
+        </div>
+
+        <div style="height: 14px"></div>
 	<div class="container">
 <form action="viewallusers.php" method="post" >
     <div class="row">
@@ -517,8 +544,9 @@ h2{
     </div><br>
     <div class="row">
       <div class="input-group">
-			<button type="submit" type="submit" name='Save-changes'>Save changes</button> 	 <button onclick="myFunction()" type="submit" type="submit" name='deleteAccount'>Delete account</button>
-			<button type="submit" type="submit" name='Create-account'>Create account</button>
+			<button class="btn btn-secondary" type="submit" name='Save-changes'>Save changes</button>
+			<button class="btn btn-danger" onclick="myFunction()" type="submit" name='deleteAccount'>Delete account</button>
+			<button class="btn btn-primary" type="submit" name='Create-account'>Create account</button>
       </div>
     </div>
   </form>
@@ -537,9 +565,6 @@ function myFunction() {
 </script>
 
 
-
-
-
-
+</div>
 </body>
 </html>

@@ -4,11 +4,20 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Admin Home | Coffee Shoot</title>
+        <link rel="stylesheet" href="admin.css" />
         <style>
-            body {
-                font-family: Arial, sans-serif;
+            body.admin-page {
                 margin: 0;
                 padding: 0;
+                font-family:
+                    system-ui,
+                    -apple-system,
+                    Segoe UI,
+                    Roboto,
+                    Arial,
+                    sans-serif;
+                background: var(--admin-bg);
+                color: var(--admin-text);
             }
 
             header {
@@ -16,6 +25,19 @@
                 background-color: #1f0b00;
                 color: #fff;
                 padding: 10px;
+            }
+
+            /* Dashboard-first layout: keep old header assets minimal */
+            header nav {
+                display: none;
+            }
+
+            header center video {
+                display: none;
+            }
+
+            .slideshow-container {
+                display: none;
             }
 
             nav {
@@ -116,7 +138,23 @@
             }
         </style>
     </head>
-    <body>
+    <body class="admin-page">
+        <div class="admin-topbar">
+            <div class="admin-topbar-inner">
+                <div class="admin-brand">
+                    <p class="admin-brand-title">Admin Dashboard</p>
+                    <p class="admin-brand-subtitle">Coffee Shoot</p>
+                </div>
+                <div class="admin-nav">
+                    <a href="admin home.html">Dashboard</a>
+                    <a href="viewallusers.php">Users</a>
+                    <a href="viewallbooking.php">Bookings</a>
+                    <a href="viewallinquire.php">Inquiries</a>
+                    <a href="admin contact us.php">Messages</a>
+                    <a class="btn btn-danger" href="logout.php">Logout</a>
+                </div>
+            </div>
+        </div>
         <header>
             <img src="img/LOGOf.png" />
             <!--style="border: 5px solid white; border-radius: 50%; "-->
@@ -161,32 +199,53 @@
             </section>
 
             <section style="margin-top: 20px">
-                <h2>Admin Dashboard</h2>
-                <p style="max-width: 900px; margin: 0 auto">
-                    Manage users, review bookings, and view inquiries from one
-                    place.
-                </p>
-                <div
-                    style="
-                        display: flex;
-                        gap: 12px;
-                        flex-wrap: wrap;
-                        justify-content: center;
-                        margin-top: 16px;
-                    "
-                >
-                    <a href="viewallusers.php" class="nav-link btn-login"
-                        >View All Users</a
+                <div class="admin-container">
+                    <div class="admin-page-title">
+                        <div>
+                            <h1>Admin Dashboard</h1>
+                            <p>Manage all admin actions in one place</p>
+                        </div>
+                    </div>
+
+                    <div class="admin-card-grid">
+                        <div class="admin-card">
+                            <h3>Manage Users</h3>
+                            <p>Create, update, and delete accounts.</p>
+                            <a class="btn btn-primary" href="viewallusers.php"
+                                >Open</a
+                            >
+                        </div>
+                        <div class="admin-card">
+                            <h3>View Bookings</h3>
+                            <p>Review all bookings made by clients.</p>
+                            <a class="btn btn-primary" href="viewallbooking.php"
+                                >Open</a
+                            >
+                        </div>
+                        <div class="admin-card">
+                            <h3>View Inquiries</h3>
+                            <p>Read all inquiry messages from users.</p>
+                            <a class="btn btn-primary" href="viewallinquire.php"
+                                >Open</a
+                            >
+                        </div>
+                        <div class="admin-card">
+                            <h3>Admin Contact Messages</h3>
+                            <p>Send a new message (stored as inquiry).</p>
+                            <a
+                                class="btn btn-secondary"
+                                href="admin contact us.php"
+                                >Open</a
+                            >
+                        </div>
+                    </div>
+
+                    <div
+                        class="admin-actions"
+                        style="justify-content: flex-end"
                     >
-                    <a href="viewallbooking.php" class="nav-link btn-login"
-                        >View All Bookings</a
-                    >
-                    <a href="viewallinquire.php" class="nav-link btn-login"
-                        >View All Inquiries</a
-                    >
-                    <a href="admin contact us.php" class="nav-link btn-login"
-                        >Admin Contact Messages</a
-                    >
+                        <a class="btn btn-danger" href="logout.php">Logout</a>
+                    </div>
                 </div>
             </section>
         </main>

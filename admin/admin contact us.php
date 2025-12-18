@@ -49,16 +49,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	<title> Contact Us | Coffee Shoot </title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="admin.css">
 </head>
-<body>
-<div style="margin: 10px 0;">
-    <a href="admin home.html">Back to Dashboard</a>
-</div>
+<body class="admin-page">
+    <div class="admin-topbar">
+        <div class="admin-topbar-inner">
+            <div class="admin-brand">
+                <p class="admin-brand-title">Messages</p>
+                <p class="admin-brand-subtitle">Admin Panel</p>
+            </div>
+            <div class="admin-nav">
+                <a href="admin home.html">Dashboard</a>
+                <a href="viewallusers.php">Users</a>
+                <a href="viewallbooking.php">Bookings</a>
+                <a href="viewallinquire.php">Inquiries</a>
+                <a href="admin contact us.php">Messages</a>
+                <a class="btn btn-danger" href="logout.php">Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-container">
+        <div class="admin-back">
+            <a href="admin home.html">Back to Dashboard</a>
+        </div>
 	<style>
-	body {
-			font-family: Arial, sans-serif;
+	body.admin-page {
+			font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 			margin: 0;
 			padding: 0;
+			background: var(--admin-bg);
+			color: var(--admin-text);
 		}
 
 		header {
@@ -219,3 +240,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	<footer>
         <p>&copy; 2024 Coffee Shoot</p>
     </footer>
+
+    </div>
+</body>
+</html>

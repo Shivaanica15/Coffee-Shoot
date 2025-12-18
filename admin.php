@@ -129,10 +129,6 @@ if (isset($_POST['Create'])) {
 $conn->close();
 ?>
 
-<div style="margin: 10px 0;">
-    <a href="admin/admin home.html">Back to Dashboard</a>
-</div>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -142,11 +138,11 @@ $conn->close();
 <meta name="veiwport" content="width-device-width, initial-scal=1.0">
 <title>Coffee Shoot</title>
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="admin/admin.css">
 <style>
         table {
             border-collapse: collapse;
             width: 100%;
-            background:Radial-gradient(#964734,#000);
         }
 
         th, td {
@@ -160,7 +156,7 @@ $conn->close();
         }
 
         tr:nth-child(even) {
-          background:Radial-gradient(#964734);
+          background-color: rgba(0,0,0,.02);
         }
 		/* 64ac15 */
 *,
@@ -168,15 +164,13 @@ $conn->close();
 *:after {
   box-sizing: border-box;
 }
-body {
-  padding: 1em;
-  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+body.admin-page {
+  padding: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   font-size: 15px;
-  color: #b9b9b9;
-  background:url(media/5.jpg);
-  background-size: cover;
-  background-position: top right;
-  }
+  color: var(--admin-text);
+  background: var(--admin-bg);
+}
 h4 {
   color: #fff;
 }
@@ -435,15 +429,43 @@ h2{
 }
     </style>
 </head>
-<body>
-<h1>Admin Page</h1>
-<h1 style="float:left;">User Table</h1>
-    <table>
+<body class="admin-page">
+    <div class="admin-topbar">
+        <div class="admin-topbar-inner">
+            <div class="admin-brand">
+                <p class="admin-brand-title">Users</p>
+                <p class="admin-brand-subtitle">Admin Panel</p>
+            </div>
+            <div class="admin-nav">
+                <a href="admin/admin home.html">Dashboard</a>
+                <a href="admin/viewallusers.php">Users</a>
+                <a href="admin/viewallbooking.php">Bookings</a>
+                <a href="admin/viewallinquire.php">Inquiries</a>
+                <a href="admin/admin contact us.php">Messages</a>
+                <a class="btn btn-danger" href="admin/logout.php">Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-container">
+        <div class="admin-back">
+            <a href="admin/admin home.html">Back to Dashboard</a>
+        </div>
+
+        <div class="admin-page-title">
+            <div>
+                <h1>Manage Users</h1>
+                <p>Admin-only user management page (legacy).</p>
+            </div>
+        </div>
+
+        <div class="admin-surface">
+            <table class="admin-table">
         <thead>
-            <tr style="color:black">
-                <th >Username</th>
+            <tr>
+                <th>Username</th>
                 <th>Password</th>
-				        <th>phone</th>
+                <th>Phone</th>
                 <th>Email</th>
                 <th>studio name</th>
                 <th>Type</th>
@@ -452,16 +474,18 @@ h2{
         <tbody>
             <?php foreach($users as $user): ?>
                 <tr>
-                    <td style="color:#fff;"><?php echo $user["username"]; ?></td>
-                    <td style="color:#fff;"><?php echo $user["password"]; ?></td>
-					          <td style="color:#fff;"><?php echo $user["phone"]; ?></td>
-                    <td style="color:#fff;"><?php echo $user["email"]; ?></td>
-                    <td style="color:#fff;"><?php echo $user["studio_name"]; ?></td>
-                    <td style="color:#fff;"><?php echo $user["type"]; ?></td>
+                    <td><?php echo $user["username"]; ?></td>
+                    <td><?php echo $user["password"]; ?></td>
+                    <td><?php echo $user["phone"]; ?></td>
+                    <td><?php echo $user["email"]; ?></td>
+                    <td><?php echo $user["studio_name"]; ?></td>
+                    <td><?php echo $user["type"]; ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
-    </table><br><br>
+            </table>
+        </div>
+        <div style="height: 14px"></div>
 	<div class="container">
 <form action="admin.php" method="post" >
     <div class="row">
@@ -521,9 +545,9 @@ h2{
     </div><br>
     <div class="row">
       <div class="input-group">
-      <button type="submit" type="submit" name='Create'>Create account</button>
-			<button onclick="myFunction()" type="submit" type="submit" name='deleteAccount' style="float:right;">Delete account</button><br><br><br><br>
-      <center><button type="submit" type="submit" name='Save-changes'>Save changes</button></center>
+      <button class="btn btn-primary" type="submit" name='Create'>Create account</button>
+			<button class="btn btn-danger" onclick="myFunction()" type="submit" name='deleteAccount'>Delete account</button><br><br><br><br>
+      <center><button class="btn btn-secondary" type="submit" name='Save-changes'>Save changes</button></center>
       </div>
     </div>
   </form>
@@ -541,10 +565,6 @@ function myFunction() {
 }
 </script>
 
-
-
-
-
-
+</div>
 </body>
 </html>

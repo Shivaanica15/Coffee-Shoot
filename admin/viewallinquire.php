@@ -33,48 +33,64 @@ while($row = $result->fetch_assoc()) {
 }
 $con->close();
 ?>
-
-<div style="margin: 10px 0;">
-    <a href="admin home.html">Back to Dashboard</a>
-</div>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-<title>Coffee Shoot</title>
-<head>
-<body><style>
-table {
-            border-collapse: collapse;
-            width: 100%;
-        }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inquiries | Admin</title>
+    <link rel="stylesheet" href="admin.css" />
+</head>
+<body class="admin-page">
+    <div class="admin-topbar">
+        <div class="admin-topbar-inner">
+            <div class="admin-brand">
+                <p class="admin-brand-title">Inquiries</p>
+                <p class="admin-brand-subtitle">Admin Panel</p>
+            </div>
+            <div class="admin-nav">
+                <a href="admin home.html">Dashboard</a>
+                <a href="viewallusers.php">Users</a>
+                <a href="viewallbooking.php">Bookings</a>
+                <a href="viewallinquire.php">Inquiries</a>
+                <a href="admin contact us.php">Messages</a>
+                <a class="btn btn-danger" href="logout.php">Logout</a>
+            </div>
+        </div>
+    </div>
 
-        th, td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: left;
-        }
+    <div class="admin-container">
+        <div class="admin-back">
+            <a href="admin home.html">Back to Dashboard</a>
+        </div>
 
-        th {
-            background-color: #f2f2f2;
-        }
+        <div class="admin-page-title">
+            <div>
+                <h1>All Inquiries</h1>
+                <p>Read-only list of inquiry messages.</p>
+            </div>
+        </div>
 
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }</style>
- <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Email</th>
-				<th>Message</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach($inquiries  as $inquirie): ?>
-                <tr>
-                    <td><?php echo $inquirie["Name"]; ?></td>
-                    <td><?php echo $inquirie["Email"]; ?></td>
-					<td><?php echo $inquirie["Message"]; ?></td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+        <div class="admin-surface">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Message</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($inquiries  as $inquirie): ?>
+                        <tr>
+                            <td><?php echo $inquirie["Name"]; ?></td>
+                            <td><?php echo $inquirie["Email"]; ?></td>
+                            <td><?php echo $inquirie["Message"]; ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
